@@ -23,10 +23,10 @@
 
 ## Deploy Image
 
-`az vm create --resource-group managed-image-rg --name MyVM --image MyPackerImage --admin-username azureuser --generate-ssh-keys`
+`az vm create --resource-group managed-image-rg --name my-custom-image-vm --image my-custom-image --admin-username azureuser --generate-ssh-keys`
 
 ## Test
 
-`az vm open-port --resource-group managed-image-rg --name MyVM --port 80`
+`az vm open-port --resource-group managed-image-rg --name my-custom-image-vm --port 80`
 
 `open http://{{VM_IP_ADDRESS}}/`
