@@ -37,4 +37,9 @@ jobs:
 
       - name: Run `packer build`
         id: build
-        run: "packer build ./custom-image.pkr.hcl"        
+        run: "packer build ./custom-image.pkr.hcl"
+        env:
+          PKR_VAR_client_id: ${{ secrets.PKR_VAR_client_id }}
+          PKR_VAR_client_secret: ${{ secrets.PKR_VAR_client_secret }}
+          PKR_VAR_subscription_id: ${{ secrets.PKR_VAR_subscription_id }}
+          PKR_VAR_tenant_id: ${{ secrets.PKR_VAR_tenant_id }}                              
