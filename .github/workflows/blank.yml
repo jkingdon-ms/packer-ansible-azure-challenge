@@ -16,7 +16,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build Custom Image with Packer
+    name: Build Image
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -47,7 +47,7 @@ jobs:
     # if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
-    name: Deploy VM with Custom Image
+    name: Deploy VM
     steps:
       - name: Azure Login
         uses: azure/login@v1
@@ -62,6 +62,6 @@ jobs:
         with:
           azcliversion: 2.44.1
           inlineScript: |
-            az vm create --resource-group managed-image-rg --name my-vm --image my-custom-image --admin-username azureuser --generate-ssh-keys
+            az vm create --resource-group managed-image-rg --name my-vm --image my-custom-image --admin-username azureuser
             az vm start -g managed-image-rg -n my-vm           
             az vm open-port --resource-group managed-image-rg --name my-vm --port 80
