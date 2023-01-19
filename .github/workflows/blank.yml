@@ -62,6 +62,6 @@ jobs:
         with:
           azcliversion: 2.44.1
           inlineScript: |
-            az vm create --resource-group managed-image-rg --name my-vm --image my-custom-image --admin-username azureuser
+            az vm create --resource-group managed-image-rg --name my-vm --image my-custom-image --admin-username azureuser --generate-ssh-keys
             az vm start -g managed-image-rg -n my-vm           
             az vm open-port --resource-group managed-image-rg --name my-vm --port 80
