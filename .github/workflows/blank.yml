@@ -34,3 +34,7 @@ jobs:
       - name: Run `packer validate`
         id: validate
         run: "packer validate ./custom-image.pkr.hcl"
+
+      - name: Run `packer build`
+        id: build
+        run: "packer build ./custom-image.pkr.hcl"        
