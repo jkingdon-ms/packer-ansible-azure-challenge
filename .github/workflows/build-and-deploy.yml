@@ -3,14 +3,33 @@ name: Build and Deploy
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-  #   branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
+  initialize:
+    runs-on: ubuntu-latest
+    name: Create Resource Group
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.44.1
+          inlineScript: |
+            az group create -l eastus -n "${GITHUB_REF_NAME}"
+
   build:
     runs-on: ubuntu-latest
     name: Build Image
@@ -40,9 +59,10 @@ jobs:
           PKR_VAR_client_secret: ${{ secrets.AZURE_SP_CLIENT_SECRET }}
           PKR_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           PKR_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          PKR_VAR_target_rg: ${GITHUB_REF_NAME}
 
   deploy:
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     name: Deploy VM
