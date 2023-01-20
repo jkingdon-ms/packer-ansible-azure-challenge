@@ -28,7 +28,7 @@ jobs:
         with:
           azcliversion: 2.44.1
           inlineScript: |
-            az group create -l eastus -n "${GITHUB_REF_NAME}"
+            az group create -l eastus -n "${{ github.ref_name }}"
 
   build:
     needs: initialize  
