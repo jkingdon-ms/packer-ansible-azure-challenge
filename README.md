@@ -37,6 +37,6 @@ Create an Azure VM based on our custom image.
 ```az vm create --resource-group managed-image-rg --name my-vm --image my-custom-image --admin-username azureuser --generate-ssh-keys```
 
 ## Test
-Open port 80 on the VM and view the Apache default webpage in browser.
+Start the VM, open port 80, and view the Apache default webpage in browser.
 
-```az vm open-port --resource-group managed-image-rg --name my-vm --port 80 && open http://$(az vm show -d -g managed-image-rg -n my-vm --query publicIps -o tsv)/```
+```az vm start -g managed-image-rg -n my-vm && az vm open-port --resource-group managed-image-rg --name my-vm --port 80 && open http://$(az vm show -d -g managed-image-rg -n my-vm --query publicIps -o tsv)/```
