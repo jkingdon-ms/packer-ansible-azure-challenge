@@ -3,9 +3,9 @@ name: Build and Deploy
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -42,7 +42,7 @@ jobs:
           PKR_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     name: Deploy VM
@@ -61,6 +61,6 @@ jobs:
           azcliversion: 2.44.1
           inlineScript: |
             az vm delete -g managed-image-rg -n my-vm --yes
-            az vm create -g managed-image-rg -n my-vm --image my-custom-image --admin-username azureuser --generate-ssh-keys
+            az vm create -g managed-image-rg -n my-vm --image my-custom-image --admin-username azureuser --ssh-key-values ${{ secrets.SSH_PUBLIC_KEY }}
             az vm start -g managed-image-rg -n my-vm           
             az vm open-port -g managed-image-rg -n my-vm --port 80
