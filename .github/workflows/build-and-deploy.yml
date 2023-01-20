@@ -67,7 +67,7 @@ jobs:
           PKR_VAR_target_rg: ${{ env.BRANCH_NAME }}
 
   deploy:
-    if: ${{ env.BRANCH_NAME == 'main' }}
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     name: Deploy VM
