@@ -31,6 +31,7 @@ jobs:
             az group create -l eastus -n "${GITHUB_REF_NAME}"
 
   build:
+    needs: initialize  
     runs-on: ubuntu-latest
     name: Build Image
     steps:
@@ -59,7 +60,7 @@ jobs:
           PKR_VAR_client_secret: ${{ secrets.AZURE_SP_CLIENT_SECRET }}
           PKR_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           PKR_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          PKR_VAR_target_rg: "${GITHUB_REF_NAME}"
+          PKR_VAR_target_rg: github.ref_name
 
   deploy:
     # if: github.ref == 'refs/heads/main'
