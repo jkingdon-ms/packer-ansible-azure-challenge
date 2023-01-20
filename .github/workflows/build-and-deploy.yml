@@ -3,9 +3,9 @@ name: Build and Deploy
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -62,7 +62,7 @@ jobs:
           PKR_VAR_target_rg: ${GITHUB_REF_NAME}
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     name: Deploy VM
