@@ -59,7 +59,7 @@ jobs:
           PKR_VAR_client_secret: ${{ secrets.AZURE_SP_CLIENT_SECRET }}
           PKR_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           PKR_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          PKR_VAR_target_rg: ${GITHUB_REF_NAME}
+          PKR_VAR_target_rg: "${GITHUB_REF_NAME}"
 
   deploy:
     # if: github.ref == 'refs/heads/main'
