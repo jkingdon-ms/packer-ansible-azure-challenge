@@ -10,6 +10,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# head_ref is used for pull requests, ref_name for push
+env:
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }}   
+
 jobs:
   create-rg:
     runs-on: ubuntu-latest
@@ -28,7 +32,8 @@ jobs:
         with:
           azcliversion: 2.44.1
           inlineScript: |
-            az group create -l eastus -n "${{ github.head_ref }}"
+            az group create -l eastus -n ${{ env.BRANCH_NAME }}
+            echo ${{ env.BRANCH_NAME }}
 
   build:
     needs: create-rg
@@ -60,10 +65,10 @@ jobs:
           PKR_VAR_client_secret: ${{ secrets.AZURE_SP_CLIENT_SECRET }}
           PKR_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           PKR_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          PKR_VAR_target_rg: ${{ github.ref_name }}
+          PKR_VAR_target_rg: ${{ env.BRANCH_NAME }}
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: ${{ env.BRANCH_NAME }} == 'main'
     needs: build
     runs-on: ubuntu-latest
     name: Deploy VM
