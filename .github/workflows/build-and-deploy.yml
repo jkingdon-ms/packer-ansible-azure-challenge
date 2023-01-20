@@ -28,7 +28,7 @@ jobs:
         with:
           azcliversion: 2.44.1
           inlineScript: |
-            az group create -l eastus -n github-actions
+            az group create -l eastus -n "${{ github.head_ref }}"
 
   build:
     needs: create-rg
