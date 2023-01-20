@@ -61,6 +61,6 @@ jobs:
           azcliversion: 2.44.1
           inlineScript: |
             az vm delete -g managed-image-rg -n my-vm --yes
-            az vm create -g managed-image-rg -n my-vm --image my-custom-image --admin-username azureuser --ssh-key-values ${{ secrets.SSH_PUBLIC_KEY }}
+            az vm create -g managed-image-rg -n my-vm --image my-custom-image --admin-username azureuser --ssh-key-values "${{ secrets.SSH_PUBLIC_KEY }}"
             az vm start -g managed-image-rg -n my-vm           
             az vm open-port -g managed-image-rg -n my-vm --port 80
