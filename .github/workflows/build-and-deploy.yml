@@ -10,7 +10,7 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# BRANCH_NAME: name of the source branch. head_ref is used for pull requests, ref_name for push
+# BRANCH_NAME: name of the source branch. head_ref is used for pull requests, ref_name for push.
 env:
  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}   
 
@@ -85,7 +85,7 @@ jobs:
         with:
           azcliversion: 2.44.1
           inlineScript: |
-            az vm delete -g managed-image-rg -n my-vm --yes
-            az vm create -g managed-image-rg -n my-vm --image my-custom-image --admin-username azureuser --ssh-key-values "${{ secrets.SSH_PUBLIC_KEY }}"
-            az vm start -g managed-image-rg -n my-vm           
-            az vm open-port -g managed-image-rg -n my-vm --port 80
+            az vm delete -g ${{ env.BRANCH_NAME }} -n my-vm --yes
+            az vm create -g ${{ env.BRANCH_NAME }} -n my-vm --image my-custom-image --admin-username azureuser --ssh-key-values "${{ secrets.SSH_PUBLIC_KEY }}"
+            az vm start -g ${{ env.BRANCH_NAME }} -n my-vm           
+            az vm open-port -g ${{ env.BRANCH_NAME }} -n my-vm --port 80
