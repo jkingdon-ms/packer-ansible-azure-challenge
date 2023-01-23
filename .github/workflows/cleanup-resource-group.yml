@@ -1,8 +1,9 @@
 name: Clean Up Resource Group
 
 on: delete
+
 jobs:
-  delete:
+  delete-branch-rg:
     if: github.event.ref_type == 'branch'
     runs-on: ubuntu-latest
     steps:
@@ -23,4 +24,4 @@ jobs:
         with:
           azcliversion: 2.44.1
           inlineScript: |
-            az group delete -n ${{ github.event.ref }}          
+            az group delete -n ${{ github.event.ref }} --yes
