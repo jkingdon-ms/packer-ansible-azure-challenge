@@ -1,6 +1,7 @@
 name: Clean Up Resource Group
 
 on: delete
+
 jobs:
   delete-branch-rg:
     if: github.event.ref_type == 'branch'
