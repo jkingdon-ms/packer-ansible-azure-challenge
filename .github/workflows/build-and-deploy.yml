@@ -1,0 +1,91 @@
+name: Build and Deploy
+
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# BRANCH_NAME: name of the source branch. head_ref is used for pull requests, ref_name for push.
+env:
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }}   
+
+jobs:
+  create-rg:
+    runs-on: ubuntu-latest
+    name: Create Resource Group
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.44.1
+          inlineScript: |
+            az group create -l eastus -n ${{ env.BRANCH_NAME }}
+
+  build:
+    needs: create-rg
+    runs-on: ubuntu-latest
+    name: Build Image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: "latest"
+
+      - name: Run `packer init`
+        id: init
+        run: "packer init ./custom-image.pkr.hcl"
+
+      - name: Run `packer validate`
+        id: validate
+        run: "packer validate ./custom-image.pkr.hcl"
+
+      - name: Run `packer build`
+        id: build
+        run: "packer build -force ./custom-image.pkr.hcl"
+        env:
+          PKR_VAR_client_id: ${{ secrets.AZURE_SP_CLIENT_ID }}
+          PKR_VAR_client_secret: ${{ secrets.AZURE_SP_CLIENT_SECRET }}
+          PKR_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          PKR_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          PKR_VAR_target_rg: ${{ env.BRANCH_NAME }}
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy VM
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.44.1
+          inlineScript: |
+            az vm delete -g ${{ env.BRANCH_NAME }} -n my-vm --yes
+            az vm create -g ${{ env.BRANCH_NAME }} -n my-vm --image my-custom-image --admin-username azureuser --ssh-key-values "${{ secrets.SSH_PUBLIC_KEY }}"
+            az vm start -g ${{ env.BRANCH_NAME }} -n my-vm           
+            az vm open-port -g ${{ env.BRANCH_NAME }} -n my-vm --port 80
