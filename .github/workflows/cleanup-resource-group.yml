@@ -3,14 +3,10 @@ name: Clean Up Resource Group
 on: delete
 
 jobs:
-  delete-branch-rg:
+  delete-rg:
     if: github.event.ref_type == 'branch'
     runs-on: ubuntu-latest
     steps:
-      - name: Clean up
-        run: |
-          echo "Clean up resource group for branch ${{ github.event.ref }}"
-
       - name: Azure Login
         uses: azure/login@v1
         with:
