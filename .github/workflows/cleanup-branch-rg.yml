@@ -1,4 +1,4 @@
-name: Clean Up Resource Group
+name: Clean Up Branch Resource Group
 
 on: delete
 

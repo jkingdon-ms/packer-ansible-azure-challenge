@@ -46,7 +46,7 @@ Start the VM, open port 80, and view the Apache default webpage in browser.
 ## Build and Deploy
 This workflow will build the image with Packer and deploy a new VM to Azure with the custom image. It runs on pushes to PRs and to the main branch. Only pushes to the main branch will trigger a VM deployment. Pushes to a PR will simply build the image and upload it to Azure. The workflow creates a new resource group per branch, in order to isolate the resources of that branch. The resource group name is the branch name in this case.
 
-## Delete Branch Resource Group
+## Cleanup Branch Resource Group
 This workflow will delete the resource group created by the previous workflow. It runs on branch deletion.
 
 ## Use cases:
