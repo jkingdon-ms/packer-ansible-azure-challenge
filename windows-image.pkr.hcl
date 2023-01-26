@@ -52,7 +52,7 @@ build {
     inline = ["/temp/ConfigureRemotingForAnsible.ps1 -forcenewsslcert"]
   }
   provisioner "ansible" {
-    playbook_file   = "./playbook-windows.yml"
+    playbook_file   = "./windows-playbook.yml"
     user            = "packer"
     use_proxy       = false
     extra_arguments = ["-vvvv", "-e", "ansible_winrm_server_cert_validation=ignore ansible_user=packer"]
