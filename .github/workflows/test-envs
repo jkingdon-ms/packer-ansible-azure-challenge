@@ -1,0 +1,14 @@
+name: Test Workflow
+
+on: workflow_dispatch
+
+jobs:
+  test1:
+    environment: test1
+    runs-on: ubuntu-latest
+    bash: echo ${{ secrets.TEST_SECRET_1 }}
+      
+  test2:
+    environment: test2
+    runs-on: ubuntu-latest
+    bash: echo ${{ secrets.TEST_SECRET_1 }}    
